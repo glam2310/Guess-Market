@@ -4,7 +4,7 @@ import jaxb.generated.GuessMarket;
 import jaxb.generated.GMEvent;
 import jaxb.generated.GMLMSR;
 import models.*;
-import exception.*; // ייבוא של החריגות המותאמות אישית שלך!
+import exception.*;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -36,13 +36,13 @@ public class MarketParser {
             for (GMEvent jaxbEvent : jaxbMarket.getGMEvents().getGMEvent()) {
                 int eventId = jaxbEvent.getId();
 
-                // 1. שימוש ב-Exception שלך לכפילות ID
+                // 1. Check for duplicate event ID
                 if (existingIds.contains(eventId)) {
                     throw new InvalidEventException("Duplicate event ID: " + eventId);
                 }
                 existingIds.add(eventId);
 
-                // 2. שימוש ב-Exception שלך לטווח עמלה חורג
+                // 2. Check for out-of-range commission value
                 int commissionValue = jaxbEvent.getComision().getValue();
                 if (commissionValue < 0 || commissionValue > 90) {
                     throw new InvalidEventException("Commission for event " + eventId + " is out of range (0-90): " + commissionValue);
@@ -79,7 +79,7 @@ public class MarketParser {
 
             return coreEvents;
 
-            // תפיסת שגיאות JAXB ושימוש ב-Exception הייעודי לקבצים
+            // Catch JAXB errors and throw a custom file exception
         } catch (JAXBException e) {
             String errorMsg = e.getMessage();
             if (e.getLinkedException() != null) {
@@ -87,7 +87,7 @@ public class MarketParser {
             }
             throw new InvalidMarketFileException("XML Structure Error: " + (errorMsg != null ? errorMsg : "Corrupted XML file."));
 
-            // רשת ביטחון לשגיאות קריאה אחרות (כמו קובץ שלא קיים בנתיב)
+            // Fallback catch-all for other reading errors (e.g., file not found)
         } catch (Exception e) {
             // אם זה כבר Exception משלנו (כמו InvalidEventException), נזרוק אותו הלאה כמו שהוא
             if (e instanceof InvalidEventException) {

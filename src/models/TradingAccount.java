@@ -6,9 +6,9 @@ import java.util.List;
 public class TradingAccount {
     private double balance;          // Current balance of the market pool
     private double totalCommissions; // Cumulative commissions collected for the report
-    private List<Transaction> transactions = new ArrayList<>(); // רשימה לשמירת היסטוריית המסחר עבור פקודה 3
+    private List<Transaction> transactions = new ArrayList<>(); // List to store trade history for command 3
 
-    // מחלקה פנימית לתיעוד שורת מסחר
+    // Inner class representing a trade record
     public static class Transaction {
         private String optionName;
         private int sharesCount;
@@ -67,13 +67,13 @@ public class TradingAccount {
     }
 
     /**
-     * משלמת לזוכים ומעדכנת את חשבון האירוע בעת סגירתו
+     * Pays out the winners and updates the event account upon closure.
      */
     public void processEventClosure(double netPayout, double commissionOnClose) {
-        // הכסף שמשולם לזוכים יוצא מיתרת החשבון
+        // Payouts to winners are deducted from the account balance
         this.balance -= netPayout;
 
-        // עמלת סגירה (אם יש) מתווספת לסך העמלות שנאספו
+        // Closing commission (if any) is added to the total collected commissions
         this.totalCommissions += commissionOnClose;
     }
 }

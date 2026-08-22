@@ -155,8 +155,6 @@ public class ConsoleUI {
 
             System.out.print("Enter number of shares to buy: ");
             int sharesToBuy = Integer.parseInt(scanner.nextLine().trim());
-
-            // --- התיקון: מקבלים קבלה מוכנה מהמנוע! ---
             Event.PurchaseReceipt receipt = selectedEvent.purchaseShares(optionIndex, sharesToBuy);
 
             System.out.println("\n=== Purchase Successful ===");
@@ -178,9 +176,6 @@ public class ConsoleUI {
         String filePath = scanner.nextLine().trim();
         try {
             List<Event> loadedEvents = MarketParser.loadMarketFromXml(filePath);
-
-            // סבסוד התחלתי - ירד מכאן כי עשית את זה כבר בצורה מושלמת בתוך MarketParser!
-
             events = loadedEvents;
             System.out.println("Success! Loaded " + events.size() + " events successfully.");
         } catch (Exception e) {
@@ -192,13 +187,12 @@ public class ConsoleUI {
 
     private void printEventTradingState(Event event) {
         System.out.println("\n=== Trading State for Event: " + event.getEventTitle() + " ===");
-
         System.out.println("Current Options State:");
         List<EventOption> options = event.getOptions();
         for (int i = 0; i < options.size(); i++) {
             EventOption opt = options.get(i);
             double currentPrice = event.getTradingMethod().calculatePrice(options, i);
-            // הדפסה מ-1 ולא מ-0 (i + 1)
+            // 1-based index for display (i + 1)
             System.out.printf("  Option [%d] %s: Current Value = %.2f, Shares Bought = %d\n",
                     (i + 1), opt.getOptionTitle(), currentPrice, opt.getShares());
         }
@@ -227,14 +221,13 @@ public class ConsoleUI {
         }
     }
 
-    // פקודה 5: סגירת אירוע
     private void closeEvent() {
         if (events == null || events.isEmpty()) {
             System.out.println("Error: No market data loaded yet. Please load an XML file first.");
             return;
         }
 
-        // סינון אירועים פעילים בלבד
+        // Filter active events only
         List<Event> activeEvents = events.stream()
                 .filter(e -> e.getEventStatus() == EventStatus.ACTIVE)
                 .toList();
@@ -262,18 +255,18 @@ public class ConsoleUI {
                 return;
             }
 
-            // הצגת מצב המסחר הנוכחי של האירוע טרם הסגירה
+            // Display the current trading state of the event prior to closure
             printEventTradingState(selectedEvent);
 
             System.out.print("Enter the index of the winning option: ");
             int winningOptionIndex = Integer.parseInt(scanner.nextLine().trim())-1;
 
-            // --- הפעלת הלוגיקה במנוע! ---
+            // --- Trigger the engine logic! ---
             selectedEvent.closeEvent(winningOptionIndex);
 
             System.out.println("\n=== Event Closed Successfully ===");
 
-            // הצגת מצב המסחר המעודכן (כולל היתרות החדשות וסימון שהאירוע סגור)
+            // Display the updated trading state (including new balances and closed status)
             printEventTradingState(selectedEvent);
 
         } catch (NumberFormatException e) {

@@ -48,15 +48,15 @@ public class Event {
     }
 
     /**
-     * מחשבת ומפקידה את הסבסוד ההתחלתי לקופת האירוע,
-     * ללא תלות בסוג שיטת המסחר הספציפית.
+     * Calculates and deposits the initial subsidy for the event pool,
+     * independently of the specific trading method type.
      */
     public void initializeSubsidy() {
-        // ה-Event פשוט מבקש את הסכום מהשיטה, מבלי לדעת איך היא מחשבת אותו
+        // Event simply requests the cost from the trading method without knowing its internal calculation logic.
         double initialSubsidy = tradingMethod.calculateInitialSubsidy(options.size());
 
         if (initialSubsidy > 0) {
-            // הכנסת כסף הסבסוד לקופה (ללא עמלה)
+            // Deposit subsidy funds into the account (without commission)
             this.account.addTransaction(initialSubsidy, 0.0);
         }
     }
@@ -113,7 +113,7 @@ public class Event {
             throw new IllegalArgumentException("Invalid winning option index.");
         }
         this.eventStatus = EventStatus.CLOSED;
-        this.winningOptionIndex = winningOptionIndex; // <--- הוספנו את השמירה!
+        this.winningOptionIndex = winningOptionIndex;
         EventOption winningOption = options.get(winningOptionIndex);
         double totalPayout = winningOption.getShares();
         double commission = 0.0;
@@ -143,10 +143,10 @@ public class Event {
             throw new IllegalArgumentException("Purchase failed: Invalid option index.");
         }
 
-        // 1. חישוב עלות המניות דרך שיטת המסחר
+        // 1. Calculate the shares cost via the trading method
         double stockCost = tradingMethod.calculateCost(options, optionIndex, sharesToBuy);
 
-        // 2. ה-Event מחשב את העמלה לפי חוקי העסק
+        // 2. Event calculates the commission based on business rules
         double commission = 0.0;
         if (this.collectionType == CollectionType.ON_PURCHASE) {
             commission = stockCost * (commissionRate / 100.0);
@@ -154,14 +154,14 @@ public class Event {
 
         double totalCost = stockCost + commission;
 
-        // 3. ביצוע המסחר בפועל
+        // 3. Execute the trade
         tradingMethod.executeTrade(options, optionIndex, sharesToBuy);
 
-        // 4. רישום בחשבון האירוע ובהיסטוריה
+        // 4. Record in the event account and history
         EventOption chosenOption = options.get(optionIndex);
         account.addTransaction(chosenOption.getOptionTitle(), sharesToBuy, stockCost, commission);
 
-        // 5. מחזירים קבלה ל-UI
+        // 5. Return the receipt to the UI
         return new PurchaseReceipt(stockCost, commission, totalCost);
     }
 }

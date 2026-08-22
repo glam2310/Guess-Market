@@ -55,7 +55,6 @@ public class MarketEngine {
      * Helper method to validate all business rules on the loaded events.
      */
     private void validateLoadedEvents(List<Event> loadedEvents) throws exception.InvalidEventException {
-        // שינוי ל-Integer כי getEventID אצלך מחזיר int
         Set<Integer> uniqueIds = new HashSet<>();
 
         for (Event event : loadedEvents) {
