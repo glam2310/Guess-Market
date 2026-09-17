@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GuessMarket">
+    <output-path>$PROJECT_DIR$/out/artifacts/GuessMarket</output-path>
+    <root id="archive" name="GuessMarket.jar">
+      <element id="module-output" name="UI" />
+      <element id="module-output" name="Engine" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/angus-activation.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jakarta.activation-api.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jakarta.xml.bind-api.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jaxb-core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jaxb-impl.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jaxb-jxc.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jaxb-ri-4.0.5/jaxb-ri-4.0.5/mod/jaxb-xjc.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
