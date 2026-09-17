@@ -175,12 +175,16 @@ public class ConsoleUI {
         System.out.print("Enter full path to XML file: ");
         String filePath = scanner.nextLine().trim();
         try {
-            List<Event> loadedEvents = MarketParser.loadMarketFromXml(filePath);
-            events = loadedEvents;
-            System.out.println("Success! Loaded " + events.size() + " events successfully.");
+            // קבלת האובייקט המלא שמכיל גם אירועים וגם משתמשים
+            MarketParser.MarketParseResult result = MarketParser.loadMarketFromXml(filePath);
+            events = result.getEvents();
+
+            // אם תרצי לשמור גם את המשתמשים במנוע או ב-ConsoleUI, זה המקום:
+            // engine.setUsers(result.getUsers());
+
+            System.out.println("Success! Loaded " + events.size() + " events and " + result.getUsers().size() + " users successfully.");
         } catch (Exception e) {
             System.out.println("Error loading file: " + e.getMessage());
-
             System.out.println("The system remains with the previous valid state (if any).");
         }
     }

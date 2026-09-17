@@ -14,7 +14,7 @@
 </GM-LMSR>
 </GM-method>
 </GM-event>
-<GM-event name="Earth Quake on Dead Sea">
+<GM-event name="Earth Quake">
 <id>7</id>
 <description>Will there be an earth quake at the dead sea until November 31th 2026</description>
 <comision type="on-purchase">10</comision>

@@ -44,9 +44,10 @@ public class Event {
         this.options = options != null ? options : new ArrayList<>();
         this.tradingMethod = tradingMethod;
         this.account = new TradingAccount();
-        this.eventStatus = EventStatus.ACTIVE;
+        this.eventStatus = EventStatus.INACTIVE;
     }
-
+    public Event() {
+    }
     /**
      * Calculates and deposits the initial subsidy for the event pool,
      * independently of the specific trading method type.
@@ -103,6 +104,27 @@ public class Event {
 
     public Integer getWinningOptionIndex() {
         return winningOptionIndex;
+    }
+
+    public void activate() {
+        if (this.eventStatus != EventStatus.INACTIVE) {
+            throw new IllegalStateException("Only a not-started event can be opened.");
+        }
+        this.eventStatus = EventStatus.ACTIVE;
+    }
+
+    public void markClosed(int winningOptionIndex) {
+        if (this.eventStatus == EventStatus.CLOSED) {
+            throw new IllegalStateException("Event is already closed.");
+        }
+        if (this.eventStatus != EventStatus.ACTIVE) {
+            throw new IllegalStateException("Only an active event can be closed.");
+        }
+        if (winningOptionIndex < 0 || winningOptionIndex >= options.size()) {
+            throw new IllegalArgumentException("Invalid winning option index.");
+        }
+        this.eventStatus = EventStatus.CLOSED;
+        this.winningOptionIndex = winningOptionIndex;
     }
 
     public void closeEvent(int winningOptionIndex) {

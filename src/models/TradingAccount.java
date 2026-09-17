@@ -13,16 +13,23 @@ public class TradingAccount {
         private String optionName;
         private int sharesCount;
         private double totalPaid;
+        private double commission;
 
         public Transaction(String optionName, int sharesCount, double totalPaid) {
+            this(optionName, sharesCount, totalPaid, 0.0);
+        }
+
+        public Transaction(String optionName, int sharesCount, double totalPaid, double commission) {
             this.optionName = optionName;
             this.sharesCount = sharesCount;
             this.totalPaid = totalPaid;
+            this.commission = commission;
         }
 
         public String getOptionName() { return optionName; }
         public int getSharesCount() { return sharesCount; }
         public double getTotalPaid() { return totalPaid; }
+        public double getCommission() { return commission; }
     }
 
     /**
@@ -63,17 +70,24 @@ public class TradingAccount {
     public void addTransaction(String optionName, int shares, double stockCost, double commission) {
         addTransaction(stockCost, commission);
         double totalPaid = stockCost + commission;
-        transactions.add(new Transaction(optionName, shares, totalPaid));
+        transactions.add(new Transaction(optionName, shares, totalPaid, commission));
     }
 
     /**
      * Pays out the winners and updates the event account upon closure.
      */
     public void processEventClosure(double netPayout, double commissionOnClose) {
-        // Payouts to winners are deducted from the account balance
         this.balance -= netPayout;
-
-        // Closing commission (if any) is added to the total collected commissions
         this.totalCommissions += commissionOnClose;
+    }
+
+    public void withdraw(double amount) {
+        this.balance -= amount;
+    }
+
+    public double drainBalance() {
+        double leftover = this.balance;
+        this.balance = 0.0;
+        return leftover;
     }
 }
